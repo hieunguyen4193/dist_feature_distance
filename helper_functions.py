@@ -57,3 +57,19 @@ def ot_distance(a, b, n = 300):
     
     d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
     return d_emd
+
+def ot_distance_nuc(a, b, n = 601):
+    x = np.arange(n, dtype=np.float64)
+    M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
+    M /= M.max() * 0.1
+    
+    d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
+    return d_emd
+
+def ot_distance_em(a, b, n = 256):
+    x = np.arange(n, dtype=np.float64)
+    M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
+    M /= M.max() * 0.1
+    
+    d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
+    return d_emd
