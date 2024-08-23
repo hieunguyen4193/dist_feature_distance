@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 ##### Helper functions
-def calculate_barycenter(A, n = 300, show_plot=False):
+def calculate_barycenter(A, n = 301, show_plot=False):
     n_distributions = A.shape[1]
 
     # loss matrix + normalization
@@ -40,7 +40,7 @@ def calculate_barycenter(A, n = 300, show_plot=False):
         plt.show()
     return bary_l2
 
-def calculate_ot_distance_to_ref(input_sample, bary_l2, inputdf, n = 300):
+def calculate_ot_distance_to_ref(input_sample, bary_l2, inputdf, n = 301):
     x = np.arange(n, dtype=np.float64)
     M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
     M /= M.max() * 0.1
@@ -50,7 +50,7 @@ def calculate_ot_distance_to_ref(input_sample, bary_l2, inputdf, n = 300):
     d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
     return d_emd
 
-def ot_distance(a, b, n = 300):
+def ot_distance(a, b, n = 301):
     x = np.arange(n, dtype=np.float64)
     M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
     M /= M.max() * 0.1
