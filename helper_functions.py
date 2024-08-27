@@ -12,12 +12,13 @@ import warnings
 warnings.filterwarnings("ignore")
 
 ##### Helper functions
-def calculate_barycenter(A, n = 301, show_plot=False):
+def calculate_barycenter(A, n = 301, show_plot=False, M = None):
     n_distributions = A.shape[1]
 
     # loss matrix + normalization
-    M = ot.utils.dist0(n)
-    M /= M.max()
+    if M is None:
+        M = ot.utils.dist0(n)
+        M /= M.max()
 
     weights = [1/n_distributions for item in range(n_distributions)]
     x = np.arange(n, dtype=np.float64)
@@ -26,14 +27,12 @@ def calculate_barycenter(A, n = 301, show_plot=False):
 
     # wasserstein
     reg = 1e-3
-    bary_wass = ot.bregman.barycenter(A, M, reg, weights)
     if show_plot:
         f, (ax1, ax2) = plt.subplots(2, 1, tight_layout=True, num=1)
         ax1.plot(x, A, color="black")
         ax1.set_title('Distributions')
 
         ax2.plot(x, bary_l2, 'r', label='l2')
-        ax2.plot(x, bary_wass, 'g', label='Wasserstein')
         ax2.set_title('Barycenters')
 
         plt.legend()
@@ -50,7 +49,15 @@ def calculate_ot_distance_to_ref(input_sample, bary_l2, inputdf, n = 301):
     d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
     return d_emd
 
-def ot_distance(a, b, n = 301):
+def ot_distance(a, b, n, M = None):
+    x = np.arange(n, dtype=np.float64)
+    if M is None:
+        M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
+        M /= M.max() * 0.1
+    d_emd = ot.emd2(a, b, M)  # direct computation of OT loss
+    return d_emd
+
+def ot_distance_flen(a, b, n = 301):
     x = np.arange(n, dtype=np.float64)
     M = ot.dist(x.reshape((n, 1)), x.reshape((n, 1)), 'euclidean')
     M /= M.max() * 0.1
